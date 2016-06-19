@@ -31,6 +31,8 @@ void ofApp::setup(){
 
     //load the saved gui state
     gui.loadFromFile( "settings.xml" );
+    
+    showGui = true;
 
 }
 
@@ -75,17 +77,29 @@ void ofApp::draw(){
     stripePattern();
     ofPopMatrix();
 
-    gui.draw();
+    if ( showGui ) gui.draw();
 }
 
 //--------------------------------------------------------------
+//This line checks whether Z is pressed and then inverts the showGui value
+//using the negotiation operator !
 void ofApp::keyPressed(int key){
+    if ( key == 'z' ) showGui = !showGui;
+    if ( key == 's' ) {
+        ofFileDialogResult res;
+        res = ofSystemSaveDialog( "preset.xml", "Saving Preset" ); if ( res.bSuccess ) gui.saveToFile( res.filePath );
+    }
+    if ( key == 'l' ) {
+        ofFileDialogResult res;
+        res = ofSystemLoadDialog( "Loading Preset" );
+        if ( res.bSuccess ) gui.loadFromFile( res.filePath );
+    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+   if ( key == OF_KEY_RETURN ) ofSaveScreen( "screenshot.png" );
 }
 
 //--------------------------------------------------------------
